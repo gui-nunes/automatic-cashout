@@ -1,0 +1,34 @@
+{
+  "name": "automatic-cashout",
+  "version": "1.0.0",
+  "description": "this is a microservice for Bshop Payments, with responsability to make automatic cashout for users",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npx jest",
+    "test:watch": "npx jest --watchAll",
+    "test:cov": "npx jest --coverage",
+    "build": "tsc",
+    "start:prod": "node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hokify/agenda": "^6.3.0",
+    "@prisma/client": "^4.10.1",
+    "amqplib": "^0.10.3",
+    "axios": "^1.3.2",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@jest/globals": "^29.4.2",
+    "@types/amqplib": "^0.10.1",
+    "@types/jest": "^29.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "eslint": "^8.33.0",
+    "ts-jest": "^29.0.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.5"
+  }
+}

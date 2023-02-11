@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type AccountAddress {
+  city         String
+  complement   String?
+  neighborhood String
+  number       String
+  postalCode   String
+  state        String
+  street       String
+}
+
+type AccountCompanyOwners {
+  name        String
+  socialName  String?
+  address     AccountAddress
+  birthDate   String?
+  cpfCnpj     String
+  email       String
+  mother      String?
+  phoneNumber String
+}
+
+type AccountIntegrationMetadata {
+  data       Json
+  paymentKey String?
+  service    String
+  status     String
+}
+
+enum ActiveService {
+  MATERA
+}
+
+model Account {
+  id                  String                       @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  socialName          String?                      @map("social_name")
+  cpfCnpj             String                       @unique() @map("cpf_cnpj")
+  phoneNumber         String                       @map("phone_number")
+  email               String
+  status              AccountStatus                @default(DATA_CREATED)
+  activeService       String                       @map("active_service")
+  sourceClient        String                       @map("source_client")
+  companyType         String                       @map("company_type")
+  withdrawKey         String                       @map("withdraw_key")
+  establishmentDate   String                       @map("establishment_date")
+  lastTransaction     DateTime                     @default(now()) @map("last_transaction")
+  cashoutTime         String[]                     @map("cashout_time")
+  cashoutFee          Float                        @map("cashout_fee")
+  address             AccountAddress
+  billingAddress      AccountAddress               @map("billing_address")
+  companyOwners       AccountCompanyOwners[]       @map("company_owners")
+  integrationMetadata AccountIntegrationMetadata[] @map("integration_metadata")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+enum AccountStatus {
+  DATA_CREATED
+  NEED_CREATE_ALIAS
+  WAITING_SEND_TO_PLATFORM_CREATE
+  CREATING
+  WAITING_PLATFORM_CREATE_ALIAS
+  CREATING_ALIAS
+  WAITING_ALIAS_CREATE
+  WITHOUT_ALIAS
+  ENABLED
+  DISABLED
+  STUCK
+  ERROR
+  REJECTED
+}
+
+enum TransactionType {
+  CASHOUT
+  PAYMENT
+  AUTOMATIC_CASHOUT
+}
+
+enum Status {
+  DATA_CREATED
+  CREATED
+  APPROVED
+  ERROR
+}
+
+model Transaction {
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  type                TransactionType
+  cpfCnpj             String          @map("cpf_cnpj")
+  withdrawKey         String          @map("withdraw_key")
+  service             String?
+  integrationMetadata Json?           @map("integration_metadata")
+  status              Status
+  destinationAccount  Json?           @map("destination_account")
+  value               Float
+  cashoutFee          Float          @map("cashout_fee")
+
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+}
+
+model AgendaJobs {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  data           Json?
+  lastModifiedBy String
+  name           String
+  nextRunAt      DateTime @db.Date
+  priority       Int
+  repeatInterval String
+  repeatTimezone Json?
+  type           String
+}
