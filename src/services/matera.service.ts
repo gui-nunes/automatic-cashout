@@ -32,8 +32,8 @@ export class MateraService implements MateraDAO {
     }
 
     async getBalance(accountId: string): Promise<MateraResponseBalance> {
-
-        const hash = createHmac('sha256', process.env.SECRET_KEY!)
+        if (!process.env.SECRET_KEY || process.env.SECRET_KEY == undefined) { throw new Error('Not defined SECRET_KEY env'); }
+        const hash = createHmac('sha256', process.env.SECRET_KEY)
             .update(accountId)
             .digest('hex');
 
@@ -106,8 +106,8 @@ export class MateraService implements MateraDAO {
                 },
             },
         };
-
-        const hash = createHmac('sha256', process.env.SECRET_KEY!)
+        if (!process.env.SECRET_KEY || process.env.SECRET_KEY == undefined) { throw new Error('Not defined SECRET_KEY env'); }
+        const hash = createHmac('sha256', process.env.SECRET_KEY)
             .update(Math.trunc(value - rate).toString() +
                 accountMetadata.data.accountId +
                 alias.psp.id +
@@ -115,7 +115,7 @@ export class MateraService implements MateraDAO {
             .digest('hex');
 
         let materaResponse: { data: MateraResponseCashout };
-
+        
         try {
             materaResponse = await this.httpClient.post(
                 `${process.env.MATERA_BASEURL}/v1/accounts/${accountMetadata.data['accountId']}/withdraw`,

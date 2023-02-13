@@ -53,12 +53,11 @@ export class RabbitMQService implements AmqpDAO {
                 }
             });
         });
-
     }
 
     async init(queue?: string): Promise<Channel> {
-        
-        const conn = await connect(process.env.AMQP_URL!);
+        if (!process.env.AMQP_URL || process.env.AMQP_URL == undefined) { throw new Error('Not defined AMQP_URL env'); }
+        const conn = await connect(process.env.AMQP_URL);
         const ch = await conn.createChannel();
         await ch.assertQueue(queue || 'automatic-cashout');
         await ch.bindQueue(

@@ -21,6 +21,7 @@ export class PrismaService implements DatabaseDAO {
             throw new Error('Error on gracefully disconnect: ' + error);
         }
     }
+
     async getAccount(id: string): Promise<Account> {
         const account = await this.prisma.account.findUniqueOrThrow({
             where: { id: id },
@@ -58,6 +59,7 @@ export class PrismaService implements DatabaseDAO {
         })) as unknown as Transaction;
         return transaction;
     }
+    
     async updateTransaction(id: string, data: Partial<Transaction>): Promise<Transaction> {
         const transaction = await this.prisma.transaction.update({
             where: { id: id },

@@ -1,6 +1,5 @@
 import { Account, Transaction, MateraResponseBalance, CashoutResponse, } from "./types"
 
-
 export interface AmqpDAO {
     send<T, R>(message: T, routingKey: string): Promise<R>
 }
@@ -22,5 +21,4 @@ export interface DatabaseDAO {
 export interface HttpDAO {
     get(url: string, options?: object): Promise<any>;
     post(url: string, data?: any, options?: object): Promise<any>;
-
 }
